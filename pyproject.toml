@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aidconnect"
+version = "0.1.0"
+description = "Connect to an industrial asset from its Asset Administration Shell: the Asset Interfaces Description tells where and how, aidconnect does it (OPC UA)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Suleman Ali" }]
+keywords = ["asset-administration-shell", "aas", "opc-ua", "industry-4-0", "asset-interfaces-description", "idta"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Manufacturing",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Interface Engine/Protocol Translator",
+]
+dependencies = ["asyncua>=1.1,<3", "basyx-python-sdk>=2.0,<3"]
+
+[project.urls]
+Repository = "https://github.com/sulemanali5760/aidconnect"
+
+[project.scripts]
+aidconnect = "aidconnect.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

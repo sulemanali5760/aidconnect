@@ -19,11 +19,24 @@ The information comes from the **Asset Interfaces Description** submodel (IDTA 0
 
 ## Install
 
+With internet:
+
 ```bash
-pip install git+https://github.com/sulemanali5760/aidconnect
+pip install https://github.com/sulemanali5760/aidconnect/releases/download/v0.1.1/aidconnect-0.1.1-py3-none-any.whl
 ```
 
-Python 3.11 or newer. Not on PyPI yet.
+Without internet (a plant PC, a commissioning laptop on the machine network): download the offline bundle
+for your system from the [latest release](https://github.com/sulemanali5760/aidconnect/releases/latest), carry
+it over on a USB stick, unzip it and run inside the folder:
+
+```bash
+python -m pip install --no-index --find-links . aidconnect
+```
+
+The bundle holds this tool and every package it needs; nothing is downloaded. Each bundle is installed in a
+clean environment and started once before it is published. Python 3.11 or newer. Not on PyPI yet.
+
+The REST side of the gateway needs the Eclipse BaSyx Python server. The offline bundle includes it; with the wheel alone, install it with the pinned line in `requirements-dev.txt`.
 
 ## What it does
 

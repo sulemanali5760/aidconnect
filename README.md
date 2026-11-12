@@ -23,7 +23,7 @@ The information comes from the **Asset Interfaces Description** submodel (IDTA 0
 pip install git+https://github.com/sulemanali5760/aidconnect
 ```
 
-Python 3.10 or newer. Not on PyPI yet.
+Python 3.11 or newer. Not on PyPI yet.
 
 ## What it does
 

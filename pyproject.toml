@@ -7,7 +7,7 @@ name = "aidconnect"
 version = "0.1.0"
 description = "Connect to an industrial asset from its Asset Administration Shell: the Asset Interfaces Description tells where and how, aidconnect does it (OPC UA)."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = { text = "MIT" }
 authors = [{ name = "Suleman Ali" }]
 keywords = ["asset-administration-shell", "aas", "opc-ua", "industry-4-0", "asset-interfaces-description", "idta"]

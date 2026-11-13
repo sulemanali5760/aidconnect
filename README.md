@@ -1,6 +1,6 @@
 # aidconnect
 
-[![ci](https://github.com/sulemanali5760/aidconnect/actions/workflows/ci.yml/badge.svg)](https://github.com/sulemanali5760/aidconnect/actions/workflows/ci.yml)
+[![ci](https://github.com/sulemanali5760/aidconnect/actions/workflows/ci.yml/badge.svg)](https://github.com/sulemanali5760/aidconnect/actions/workflows/ci.yml) [![PyPI](https://img.shields.io/pypi/v/aidconnect)](https://pypi.org/project/aidconnect/)
 
 Connect to an industrial asset from its **Asset Administration Shell**. The AAS file says where the asset's OPC UA server is, which security it wants and which datapoints it has; `aidconnect` reads that and connects. No endpoint, tag list or security setting in your code.
 
@@ -19,10 +19,8 @@ The information comes from the **Asset Interfaces Description** submodel (IDTA 0
 
 ## Install
 
-With internet:
-
 ```bash
-pip install https://github.com/sulemanali5760/aidconnect/releases/download/v0.1.1/aidconnect-0.1.1-py3-none-any.whl
+pip install aidconnect
 ```
 
 Without internet (a plant PC, a commissioning laptop on the machine network): download the offline bundle
@@ -34,7 +32,7 @@ python -m pip install --no-index --find-links . aidconnect
 ```
 
 The bundle holds this tool and every package it needs; nothing is downloaded. Each bundle is installed in a
-clean environment and started once before it is published. Python 3.11 or newer. Not on PyPI yet.
+clean environment and started once before it is published. Python 3.11 or newer.
 
 The REST side of the gateway needs the Eclipse BaSyx Python server. The offline bundle includes it; with the wheel alone, install it with the pinned line in `requirements-dev.txt`.
 

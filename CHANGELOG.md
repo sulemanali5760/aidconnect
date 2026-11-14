@@ -2,6 +2,12 @@
 
 All notable changes to this project are listed here. Versions follow [Semantic Versioning](https://semver.org).
 
+## 0.2.0 - 2026-11-14
+
+- Asset Interfaces Mapping Configuration (IDTA 02027, AIMC 1.0): the gateway writes each mapped datapoint into the
+  Property the mapping names. Mappings are checked when the file is loaded.
+- `Datapoint.element` and `Interface.element`: the AID elements behind them, for references.
+
 ## 0.1.1 - 2026-11-12
 
 - Releases carry a wheel and offline bundles (tool plus all dependencies, including the BaSyx server for the REST side) for Linux and Windows.

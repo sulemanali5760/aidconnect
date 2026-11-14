@@ -26,6 +26,7 @@ class Datapoint:
     ns_index: int | None = None     # namespace index, when the AID uses "ns=<n>"
     minimum: float | None = None
     maximum: float | None = None
+    element: object = field(default=None, repr=False, compare=False)   # its AID element, for AIMC references
 
 
 @dataclass(frozen=True)
@@ -53,6 +54,7 @@ class Interface:
     submodel_id: str = ""
     store: object = field(default=None, repr=False, compare=False)   # the loaded AAS (basyx object store)
     files: object = field(default=None, repr=False, compare=False)
+    element: object = field(default=None, repr=False, compare=False)   # the interface collection in the AID
 
 
 def parse_href(href: str) -> tuple[str, int | None, str | int]:
@@ -130,7 +132,7 @@ def read_interface(aasx_path) -> Interface:
                 rng = _get(p, "min_max")
                 points.append(Datapoint(key, _text(_val(p, "title", key)), _val(p, "unit"), kind, nsu, ident, idx,
                                         None if rng is None or rng.min is None else float(rng.min),
-                                        None if rng is None or rng.max is None else float(rng.max)))
+                                        None if rng is None or rng.max is None else float(rng.max), p))
             return Interface(_val(meta, "base"), _security(meta), tuple(points), _text(_val(itf, "title")),
-                             sm.id, store, files)
+                             sm.id, store, files, itf)
     raise LookupError(f"{aasx_path}: no Asset Interfaces Description with an OPC UA interface")

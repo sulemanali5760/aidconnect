@@ -42,9 +42,22 @@ The REST side of the gateway needs the Eclipse BaSyx Python server. The offline 
 |---|---|
 | `aidconnect.read_interface(file)` | Endpoint, security and datapoints (name, type, unit, range, node reference) as plain Python objects. Opens no connection. |
 | `aidconnect.connect(file, ...)` | A session configured exactly as the AAS demands. `await session.read()` returns all datapoints in one request, typed (`float`, `int`, `bool`, `str`). |
-| `aidconnect.Gateway(file, ...)` | Keeps reading, reconnects after a connection loss (1 s … 30 s back-off), and publishes the values as submodel `OperationalData` on the AAS Part 2 REST API, read-only. |
+| `aidconnect.Gateway(file, ...)` | Keeps reading, reconnects after a connection loss (1 s … 30 s back-off), and publishes the values as submodel `OperationalData` on the AAS Part 2 REST API, read-only. If the file has an Asset Interfaces Mapping Configuration (IDTA 02027), each mapped value is also written into the Property the mapping names. |
 | `python -m aidconnect inspect file` | Prints what the AAS says. |
 | `python -m aidconnect serve file` | Runs the gateway. |
+
+### Mapping values into your own submodels (IDTA 02027)
+
+Put an **Asset Interfaces Mapping Configuration** (AIMC 1.0) next to the AID in the
+same AAS. Each `MappingSourceSinkRelation` names a datapoint of the AID (`first`) and a
+Property in any submodel (`second`), for example `TankLevel` in a monitoring submodel.
+The gateway then acts as the Data Mapping Processor of the template: it writes every
+value it reads into that Property, and the REST side serves the submodel live.
+
+The mapping is checked when the file is loaded: a relation whose source is not a
+datapoint, whose sink is not a Property, or whose sink has a value type the datapoint
+cannot fill (a number into `xs:int`) is refused with a `ValueError` that names it.
+Configurations that point at another interface of the AID are left alone.
 
 ### A secured asset
 
@@ -75,14 +88,15 @@ If something is missing you get a `ConfigurationError` that names it, before any
 
 - an open server with four data types (number, integer, boolean, string);
 - a secured server (Basic256Sha256, SignAndEncrypt, trust list, UserName login): the right setup reads; a wrong password, an untrusted client certificate and a wrong server certificate are each refused with the expected error;
-- the gateway: live values over REST, asset switched off and on again, reconnects by itself.
+- the gateway: live values over REST, asset switched off and on again, reconnects by itself;
+- AIMC: an AASX with a mapping configuration, written and read back, puts the live values into the mapped properties; a wrong value type and a source that is not a datapoint are refused.
 
 ## Limits
 
 - **OPC UA only.** The Asset Interfaces Description can also describe Modbus, MQTT and HTTP interfaces; those are not implemented.
 - **Scalar values only** (number, integer, boolean, string). No arrays or structures.
 - **No hardware test yet.** Everything is tested against software servers on one machine. A Siemens S7-1500 names its nodes like `ns=3;s="DB"."tag"`; that form is parsed, but not tried on a real controller.
-- **`OperationalData` is this project's own submodel.** The standard way to map datapoints into submodels is IDTA 02027 (Asset Interfaces Mapping Configuration); planned, not implemented.
+- **AIMC 1.0, asset to AAS only**, as the template itself defines it. `OperationalData` stays as the gateway's own status submodel (connection state, last update, every datapoint).
 - **The REST side needs the Eclipse BaSyx Python server**, which is not on PyPI. Install it with the pinned line in `requirements-dev.txt`.
 - **Polling, not subscriptions.** One batched read per period (default 1 s).
 

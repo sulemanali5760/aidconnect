@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aidconnect"
-version = "0.1.1"
+version = "0.2.0"
 description = "Connect to an industrial asset from its Asset Administration Shell: the Asset Interfaces Description tells where and how, aidconnect does it (OPC UA)."
 readme = "README.md"
 requires-python = ">=3.11"

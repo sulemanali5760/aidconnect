@@ -1,6 +1,7 @@
 """Gateway: one AAS file in, live values out.
 
-    AASX -> Asset Interfaces Description -> OPC UA connection -> submodel "OperationalData"
+    AASX -> Asset Interfaces Description -> OPC UA connection -> submodel "OperationalData",
+    and every Property an Asset Interfaces Mapping Configuration (IDTA 02027) maps a datapoint to
     -> AAS Part 2 REST API (read-only), next to the asset's own submodels
 
 It keeps reading, says so when the asset is gone, and reconnects on its own. It never writes to the asset.
@@ -17,6 +18,7 @@ from asyncua import ua
 from basyx.aas import model
 
 from aidconnect.aid import Interface, read_interface
+from aidconnect.aimc import read_mappings
 from aidconnect.session import ConfigurationError, Session
 
 BASE_PATH = "/api/v3.1"
@@ -75,6 +77,7 @@ class Gateway:
         self.values: dict = {p.name: None for p in self.interface.points}
         self.connected = False
         self.store, self.files = self.interface.store, self.interface.files
+        self.mappings = read_mappings(self.interface)      # [(datapoint, target Property)], may be empty
         self._state = model.Property("ConnectionState", model.datatypes.String, "starting")
         self._updated = model.Property("LastUpdate", model.datatypes.DateTime)
         self._props = {}
@@ -116,6 +119,8 @@ class Gateway:
                             # ponytail: single attribute writes, read by the REST thread; a lock if a value
                             # ever needs more than one assignment
                             self._props[name].value = v
+                        for name, sink in self.mappings:
+                            sink.value = self.values[name]
                         self._updated.value = datetime.datetime.now(datetime.timezone.utc)
                         self.connected = True
                         if connected:
